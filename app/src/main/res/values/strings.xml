@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ExchangeRateAppTest</string>
+    <string name="currency_tab_name">Currencies</string>
+    <string name="favourite_tab_name">Favorites</string>
 </resources>
