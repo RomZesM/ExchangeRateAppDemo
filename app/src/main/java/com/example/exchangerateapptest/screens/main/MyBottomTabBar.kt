@@ -19,7 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun MyBottomTabsBar(
 	navController: NavHostController
 ) {
-	val bottomTabs= listOf(
+	val bottomTabs = listOf(
 		BottomNavItem("Currencies", "Currencies", Icons.Default.Home),
 		BottomNavItem("Favourites", "Favourites", Icons.Default.Star)
 	)
