@@ -23,9 +23,9 @@ class FetchLatestCurrencyUseCase @Inject constructor(
 				currencies = map
 			}
 		} catch (e: Exception) {
-			Log.e("Fetching currencies", e.toString())
+			Log.e("Fetching currencies error:", e.toString())
 		}
-		return CurrenciesResponse(currencies)
+		return CurrenciesResponse(currencies.toList())
 	}
 
 }
