@@ -16,9 +16,9 @@ class CurrenciesScreenViewModel @Inject constructor(
 
 	val currencies = MutableStateFlow(CurrenciesResponse(emptyList()))
 
-	suspend fun fetchLastCurrencies() {
+	suspend fun fetchLastCurrencies(selectedCurrency: String?) {
 		withContext(Dispatchers.IO) {
-			currencies.value = fetchLatestCurrencyUseCase.invoke()
+			currencies.value = fetchLatestCurrencyUseCase.invoke(selectedCurrency)
 		}
 	}
 }

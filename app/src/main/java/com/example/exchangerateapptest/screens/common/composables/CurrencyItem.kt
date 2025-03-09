@@ -27,6 +27,7 @@ fun CurrencyItem(currencyTitle: String, currencyValue: Double) {
 				text = currencyTitle,
 				style = MaterialTheme.typography.bodyLarge
 			)
+
 			Text(
 				modifier = Modifier
 					.weight(1.8f),

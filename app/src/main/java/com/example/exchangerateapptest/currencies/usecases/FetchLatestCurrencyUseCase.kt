@@ -11,11 +11,11 @@ class FetchLatestCurrencyUseCase @Inject constructor(
 
 	private var currencies = emptyMap<String, Double>()
 
-	suspend fun invoke(): CurrenciesResponse {
+	suspend fun invoke(selectedCurrency: String?): CurrenciesResponse {
 
 		val map = mutableMapOf<String, Double>()
 		try {
-			val response = freeCurrencyApi.getLatestRates()
+			val response = freeCurrencyApi.getLatestRates(selectedCurrency)
 			if (response.isSuccessful && response.body() != null) {
 				response.body()?.data?.map { currenciesResponseSchema ->
 					map.put(currenciesResponseSchema.key, currenciesResponseSchema.value)
