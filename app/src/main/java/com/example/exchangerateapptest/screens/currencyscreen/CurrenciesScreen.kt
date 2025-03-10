@@ -19,7 +19,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.exchangerateapptest.currencies.CurrencyEntry
-import com.example.exchangerateapptest.screens.common.composables.Constants
 import com.example.exchangerateapptest.screens.common.composables.CurrencyItem
 
 @Composable
@@ -42,7 +40,7 @@ fun CurrenciesScreen(
 	val currencies = viewModel.currencies.collectAsState()
 	val favourites = viewModel.favourites.collectAsState(emptyList())
 	var isCurrencyListUpdated = remember { true }
-	val selectedCurrency = remember { mutableStateOf(Constants.DEFAULT_CURRENCY) }
+	val selectedCurrency = viewModel.selectedCurrency.collectAsState()
 
 	LaunchedEffect(Unit) {
 		viewModel.fetchFavouriteCurrenciesPairs(selectedCurrency.value)
@@ -54,7 +52,9 @@ fun CurrenciesScreen(
 
 	Column {
 		Row {
-			SelectableCurrencyDropdown(currencies.value.data, selectedCurrency)
+			SelectableCurrencyDropdown(currencies.value.data,
+				selectedCurrency.value
+			) { selectedCurrency -> viewModel.updateSelectedCurrency(selectedCurrency) }
 
 			IconButton(onClick = { navController.navigate("Filters") }) {
 				Icon(Icons.Default.Search, contentDescription = null)
@@ -95,14 +95,15 @@ fun CurrenciesScreen(
 @Composable
 fun SelectableCurrencyDropdown(
 	currencies: List<CurrencyEntry>,
-	selectedCurrency: MutableState<String>
+	selectedCurrency: String,
+	onSelectCurrency: (String) -> Unit
 ) {
 	var expanded by remember { mutableStateOf(false) }
 	val menuItems = getListOfCurrencies(currencies)
 
 	Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
 		Button(onClick = { expanded = true }) {
-			Text(text = selectedCurrency.value)
+			Text(text = selectedCurrency)
 		}
 
 		DropdownMenu(
@@ -113,7 +114,7 @@ fun SelectableCurrencyDropdown(
 				DropdownMenuItem(
 					text = { Text(item) },
 					onClick = {
-						selectedCurrency.value = item
+						onSelectCurrency(item)
 						expanded = false
 
 					}

@@ -1,5 +1,6 @@
 package com.example.exchangerateapptest.screens.currencyscreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exchangerateapptest.currencies.CurrenciesResponse
@@ -8,6 +9,7 @@ import com.example.exchangerateapptest.currencies.FavouriteCurrenciesPair
 import com.example.exchangerateapptest.currencies.usecases.FetchFavouritesCurrenciesPairsUseCase
 import com.example.exchangerateapptest.currencies.usecases.FetchLatestCurrencyUseCase
 import com.example.exchangerateapptest.currencies.usecases.ToggleFavouritePairIconUseCase
+import com.example.exchangerateapptest.screens.common.composables.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +29,8 @@ class CurrenciesScreenViewModel @Inject constructor(
 	val currencies = _currencies.asStateFlow()
 	private val _favourites = MutableStateFlow<List<FavouriteCurrenciesPair>>(emptyList())
 	val favourites = _favourites.asStateFlow()
+	private val _selectedCurrency = MutableStateFlow(Constants.DEFAULT_CURRENCY)
+	val selectedCurrency = _selectedCurrency.asStateFlow()
 
 
 	suspend fun fetchLastCurrencies(selectedCurrency: String) {
@@ -69,6 +73,10 @@ class CurrenciesScreenViewModel @Inject constructor(
 			it.copy(isFavourite = isFavourite)
 		}
 		_currencies.value = _currencies.value.copy(data = updatedList)
+	}
+
+	fun updateSelectedCurrency(selectedCurrency: String) {
+		_selectedCurrency.value = selectedCurrency
 	}
 
 }
