@@ -14,6 +14,12 @@ interface FavouriteCurrenciesPairDAO {
 	@Query("SELECT * FROM favorite")
 	fun observe(): Flow<List<FavouriteCurrenciesPairEntity>>
 
+	@Query("SELECT * FROM favorite")
+	fun getAll(): List<FavouriteCurrenciesPairEntity>
+
+	@Query("SELECT * FROM favorite WHERE id = :id")
+	suspend fun getById(id: String): FavouriteCurrenciesPairEntity?
+
 	@Query("DELETE FROM favorite WHERE id = :id")
 	suspend fun delete(id: String)
 

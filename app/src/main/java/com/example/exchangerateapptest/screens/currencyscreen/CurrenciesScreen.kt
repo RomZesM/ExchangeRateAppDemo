@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.exchangerateapptest.currencies.CurrencyEntry
 import com.example.exchangerateapptest.screens.common.composables.Constants
 import com.example.exchangerateapptest.screens.common.composables.CurrencyItem
 
@@ -40,8 +41,12 @@ fun CurrenciesScreen(
 	val viewModel: CurrenciesScreenViewModel = hiltViewModel()
 	val currencies = viewModel.currencies.collectAsState()
 	val favourites = viewModel.favourites.collectAsState(emptyList())
-	val isCurrencyListUpdated = remember { true }
+	var isCurrencyListUpdated = remember { true }
 	val selectedCurrency = remember { mutableStateOf(Constants.DEFAULT_CURRENCY) }
+
+	LaunchedEffect(Unit) {
+		viewModel.fetchFavouriteCurrenciesPairs(selectedCurrency.value)
+	}
 
 	LaunchedEffect(selectedCurrency.value) {
 		viewModel.fetchLastCurrencies(selectedCurrency.value)
@@ -68,14 +73,15 @@ fun CurrenciesScreen(
 					items(currencies.value.data.size) { index ->
 						val currency = currencies.value.data[index]
 						CurrencyItem(
-							currencyTitle = currency.first,
-							currencyValue = currency.second,
-							isFavourite = false
+							currencyTitle = currency.title,
+							currencyValue = currency.value,
+							isFavourite = currency.isFavourite
 						) {
-							viewModel.addCurrenciesPairToFavourites(
+							viewModel.toggleCurrenciesPairFavourites(
 								selectedCurrency.value,
 								currency
 							)
+							isCurrencyListUpdated = true
 						}
 					}
 				}
@@ -88,7 +94,7 @@ fun CurrenciesScreen(
 
 @Composable
 fun SelectableCurrencyDropdown(
-	currencies: List<Pair<String, Double>>,
+	currencies: List<CurrencyEntry>,
 	selectedCurrency: MutableState<String>
 ) {
 	var expanded by remember { mutableStateOf(false) }
@@ -117,10 +123,10 @@ fun SelectableCurrencyDropdown(
 	}
 }
 
-private fun getListOfCurrencies(currencies: List<Pair<String, Double>>): List<String> {
+private fun getListOfCurrencies(currencies: List<CurrencyEntry>): List<String> {
 	val currenciesOptions = mutableListOf<String>()
 	for (currency in currencies) {
-		currenciesOptions.add(currency.first)
+		currenciesOptions.add(currency.title)
 	}
 	return currenciesOptions
 }
