@@ -59,29 +59,29 @@ fun CurrenciesScreen(
 				Icon(Icons.Default.Search, contentDescription = null)
 			}
 		}
-		Box() {
-			LazyColumn(
-				modifier = Modifier
-					.fillMaxSize()
-					.padding(vertical = 5.dp),
-				verticalArrangement = Arrangement.spacedBy(20.dp),
-				contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
-			) {
-				items(currencies.value.data.size) { index ->
-					val currency = currencies.value.data[index]
-					CurrencyItem(
-						currencyTitle = currency.title,
-						currencyValue = currency.value,
-						isFavourite = currency.isFavourite
-					) {
-						viewModel.toggleCurrenciesPairFavourites(
-							selectedCurrency.value,
-							currency
-						)
+			Box() {
+				LazyColumn(
+					modifier = Modifier
+						.fillMaxSize()
+						.padding(vertical = 5.dp),
+					verticalArrangement = Arrangement.spacedBy(20.dp),
+					contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
+				) {
+					items(currencies.value.data.size) { index ->
+						val currency = currencies.value.data[index]
+						CurrencyItem(
+							currencyTitle = currency.title,
+							currencyValue = currency.value,
+							isFavourite = currency.isFavourite
+						) {
+							viewModel.toggleCurrenciesPairFavourites(
+								selectedCurrency.value,
+								currency
+							)
+						}
 					}
 				}
 			}
-		}
 
 
 	}
