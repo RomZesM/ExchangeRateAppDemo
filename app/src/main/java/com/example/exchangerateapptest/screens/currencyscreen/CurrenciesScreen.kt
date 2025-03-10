@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -40,6 +39,7 @@ fun CurrenciesScreen(
 ) {
 	val viewModel: CurrenciesScreenViewModel = hiltViewModel()
 	val currencies = viewModel.currencies.collectAsState()
+	val favourites = viewModel.favourites.collectAsState(emptyList())
 	val isCurrencyListUpdated = remember { true }
 	val selectedCurrency = remember { mutableStateOf(Constants.DEFAULT_CURRENCY) }
 
@@ -54,6 +54,7 @@ fun CurrenciesScreen(
 			IconButton(onClick = { navController.navigate("Filters") }) {
 				Icon(Icons.Default.Search, contentDescription = null)
 			}
+			Text(text = favourites.value.size.toString())
 		}
 		if (isCurrencyListUpdated) {
 			Box() {
@@ -69,7 +70,13 @@ fun CurrenciesScreen(
 						CurrencyItem(
 							currencyTitle = currency.first,
 							currencyValue = currency.second,
-						)
+							isFavourite = false
+						) {
+							viewModel.addCurrenciesPairToFavourites(
+								selectedCurrency.value,
+								currency
+							)
+						}
 					}
 				}
 			}

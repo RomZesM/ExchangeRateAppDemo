@@ -17,5 +17,4 @@ interface FavouriteCurrenciesPairDAO {
 	@Query("DELETE FROM favorite WHERE id = :id")
 	suspend fun delete(id: String)
 
-
 }
