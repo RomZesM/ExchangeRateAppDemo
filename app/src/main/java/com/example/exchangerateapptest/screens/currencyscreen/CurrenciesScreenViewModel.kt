@@ -1,6 +1,5 @@
 package com.example.exchangerateapptest.screens.currencyscreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exchangerateapptest.currencies.CurrenciesResponse
