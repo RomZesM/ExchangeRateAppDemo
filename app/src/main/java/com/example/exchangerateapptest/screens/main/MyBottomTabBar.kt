@@ -33,7 +33,15 @@ fun MyBottomTabsBar(
 				label = { Text(bottomTab.label) },
 				selected = currentRoute == bottomTab.route,
 				onClick = {
-					navController.navigate(bottomTab.route)
+					if (currentRoute != bottomTab.route) {
+						navController.navigate(bottomTab.route) {
+							popUpTo(navController.graph.startDestinationId) {
+								saveState = true
+							}
+							launchSingleTop = true
+							restoreState = true
+						}
+					}
 				},
 				colors = NavigationBarItemDefaults.colors(
 					indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
