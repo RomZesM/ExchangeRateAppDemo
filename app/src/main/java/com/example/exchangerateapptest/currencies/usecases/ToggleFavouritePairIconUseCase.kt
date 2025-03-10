@@ -5,8 +5,8 @@ import com.example.exchangerateapptest.common.database.FavouriteCurrenciesPairEn
 import com.example.exchangerateapptest.currencies.FavouriteCurrenciesPair
 import javax.inject.Inject
 
-class ToggleFavouritePairIconUseCase @Inject constructor(
-	private val favouriteCurrenciesPairDAO: FavouriteCurrenciesPairDAO
+	class ToggleFavouritePairIconUseCase @Inject constructor(
+		private val favouriteCurrenciesPairDAO: FavouriteCurrenciesPairDAO
 ) {
 	suspend operator fun invoke(favouritePair: FavouriteCurrenciesPair) {
 		if (favouriteCurrenciesPairDAO.getById(favouritePair.id) != null) {

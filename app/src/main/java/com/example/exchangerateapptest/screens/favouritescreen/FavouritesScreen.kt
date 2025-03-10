@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,12 +17,7 @@ import com.example.exchangerateapptest.screens.common.composables.CurrencyItem
 fun FavouritesScreen() {
 
 	val viewModel: FavouriteScreenViewModel = hiltViewModel()
-	val favouriteCurrencies = viewModel.favourites.collectAsState()
-
-	LaunchedEffect(Unit) {
-		viewModel.fetchFavouriteCurrenciesPairs()
-	}
-
+	val favouriteCurrencies = viewModel.favourites.collectAsState(emptyList())
 
 	Box() {
 		LazyColumn(
@@ -38,9 +32,11 @@ fun FavouritesScreen() {
 				CurrencyItem(
 					currencyTitle = favCurrency.id,
 					currencyValue = favCurrency.value,
-					isFavourite = favCurrency.isFavourite
+					isFavourite = true
 				) {
-
+					viewModel.toggleCurrenciesPairFavourites(
+						favCurrency
+					)
 				}
 			}
 		}
