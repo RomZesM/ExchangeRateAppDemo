@@ -2,6 +2,7 @@ package com.example.exchangerateapptest.currencies.usecases
 
 
 import android.util.Log
+import com.example.exchangerateapptest.currencies.CurrenciesResponse
 import com.example.exchangerateapptest.networking.FreeCurrencyApi
 import javax.inject.Inject
 

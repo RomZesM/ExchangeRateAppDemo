@@ -1,5 +1,10 @@
 package com.example.exchangerateapptest.common.di
 
+import android.app.Application
+import androidx.room.Room
+import com.example.exchangerateapptest.common.Constants
+import com.example.exchangerateapptest.common.database.AppDatabase
+import com.example.exchangerateapptest.common.database.FavouriteCurrenciesPairDAO
 import com.example.exchangerateapptest.networking.FreeCurrencyApi
 import dagger.Module
 import dagger.Provides
@@ -37,5 +42,19 @@ class ApplicationModule {
 		return retrofit.create(FreeCurrencyApi::class.java)
 	}
 
+	@Provides
+	@Singleton
+	fun myAppDatabase(application: Application): AppDatabase {
+		return Room.databaseBuilder(
+			application,
+			AppDatabase::class.java,
+			Constants.DATABASE_NAME
+		).build()
+	}
+
+	@Provides
+	fun favoriteCurrenciesPairDao(database: AppDatabase): FavouriteCurrenciesPairDAO {
+		return database.favouriteCurrenciesPairDAO
+	}
 
 }
