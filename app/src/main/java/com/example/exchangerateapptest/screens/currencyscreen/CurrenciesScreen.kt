@@ -38,8 +38,6 @@ fun CurrenciesScreen(
 ) {
 	val viewModel: CurrenciesScreenViewModel = hiltViewModel()
 	val currencies = viewModel.currencies.collectAsState()
-	val favourites = viewModel.favourites.collectAsState(emptyList())
-	var isCurrencyListUpdated = remember { true }
 	val selectedCurrency = viewModel.selectedCurrency.collectAsState()
 
 	LaunchedEffect(Unit) {
@@ -52,41 +50,39 @@ fun CurrenciesScreen(
 
 	Column {
 		Row {
-			SelectableCurrencyDropdown(currencies.value.data,
+			SelectableCurrencyDropdown(
+				currencies.value.data,
 				selectedCurrency.value
 			) { selectedCurrency -> viewModel.updateSelectedCurrency(selectedCurrency) }
 
 			IconButton(onClick = { navController.navigate("Filters") }) {
 				Icon(Icons.Default.Search, contentDescription = null)
 			}
-			Text(text = favourites.value.size.toString())
 		}
-		if (isCurrencyListUpdated) {
-			Box() {
-				LazyColumn(
-					modifier = Modifier
-						.fillMaxSize()
-						.padding(vertical = 5.dp),
-					verticalArrangement = Arrangement.spacedBy(20.dp),
-					contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
-				) {
-					items(currencies.value.data.size) { index ->
-						val currency = currencies.value.data[index]
-						CurrencyItem(
-							currencyTitle = currency.title,
-							currencyValue = currency.value,
-							isFavourite = currency.isFavourite
-						) {
-							viewModel.toggleCurrenciesPairFavourites(
-								selectedCurrency.value,
-								currency
-							)
-							isCurrencyListUpdated = true
-						}
+		Box() {
+			LazyColumn(
+				modifier = Modifier
+					.fillMaxSize()
+					.padding(vertical = 5.dp),
+				verticalArrangement = Arrangement.spacedBy(20.dp),
+				contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
+			) {
+				items(currencies.value.data.size) { index ->
+					val currency = currencies.value.data[index]
+					CurrencyItem(
+						currencyTitle = currency.title,
+						currencyValue = currency.value,
+						isFavourite = currency.isFavourite
+					) {
+						viewModel.toggleCurrenciesPairFavourites(
+							selectedCurrency.value,
+							currency
+						)
 					}
 				}
 			}
 		}
+
 
 	}
 
