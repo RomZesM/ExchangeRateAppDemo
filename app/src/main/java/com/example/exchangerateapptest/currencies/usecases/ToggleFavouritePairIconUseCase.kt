@@ -9,14 +9,18 @@ class ToggleFavouritePairIconUseCase @Inject constructor(
 	private val favouriteCurrenciesPairDAO: FavouriteCurrenciesPairDAO
 ) {
 	suspend operator fun invoke(favouritePair: FavouriteCurrenciesPair) {
-		favouriteCurrenciesPairDAO.upsert(
-			FavouriteCurrenciesPairEntity(
-				id = favouritePair.id,
-				baseCurrency = favouritePair.baseCurrency,
-				targetCurrency = favouritePair.targetCurrency,
-				value = favouritePair.value
+		if (favouriteCurrenciesPairDAO.getById(favouritePair.id) != null) {
+			favouriteCurrenciesPairDAO.delete(favouritePair.id)
+		} else {
+			favouriteCurrenciesPairDAO.upsert(
+				FavouriteCurrenciesPairEntity(
+					id = favouritePair.id,
+					baseCurrency = favouritePair.baseCurrency,
+					targetCurrency = favouritePair.targetCurrency,
+					value = favouritePair.value
+				)
 			)
-		)
+		}
 	}
 
 }
