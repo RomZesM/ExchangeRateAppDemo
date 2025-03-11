@@ -36,7 +36,7 @@ fun FiltersScreen(
 		FiltersOptions.SORTING_VALUE_DESC
 	)
 
-	var selectedOption by remember { mutableStateOf(sharedViewModel.currentFiltersOptions.value) }
+	var selectedOption by remember { mutableStateOf(sharedViewModel.stateFlow.value.currentFiltersOptions) }
 
 	Column {
 		filterOptions.forEach { option ->

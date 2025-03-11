@@ -27,8 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.exchangerateapptest.R
 import com.example.exchangerateapptest.currencies.CurrencyEntry
 import com.example.exchangerateapptest.screens.common.composables.CurrencyItem
@@ -40,27 +43,29 @@ fun CurrenciesScreen(
 	viewModel: CurrenciesScreenViewModel
 ) {
 
-	val currencies = viewModel.currencies.collectAsState()
-	val selectedCurrency = viewModel.selectedCurrency.collectAsState()
-	val filtersOptions = viewModel.currentFiltersOptions.collectAsState()
+	val state = viewModel.stateFlow.collectAsState()
 
 	LaunchedEffect(Unit) {
-		viewModel.fetchFavouriteCurrenciesPairs(selectedCurrency.value)
+		viewModel.fetchFavouriteCurrenciesPairs(state.value.selectedCurrency)
 	}
 
-	LaunchedEffect(selectedCurrency.value) {
-		viewModel.fetchLastCurrencies(selectedCurrency.value)
+	LaunchedEffect(state.value.selectedCurrency) {
+		viewModel.fetchLastCurrencies(state.value.selectedCurrency)
 	}
 
-	LaunchedEffect(filtersOptions.value) {
+	LaunchedEffect(state.value.currentFiltersOptions) {
 		viewModel.sortCurrencies()
 	}
 
-	Column {
-		Row {
+	Column(modifier = Modifier.padding(vertical = 10.dp)) {
+		Row(
+			modifier = Modifier.padding(vertical = 10.dp),
+			verticalAlignment = Alignment.CenterVertically,
+			horizontalArrangement = Arrangement.SpaceBetween
+		) {
 			SelectableCurrencyDropdown(
-				currencies.value.data,
-				selectedCurrency.value
+				state.value.currencies,
+				state.value.selectedCurrency
 			) { selectedCurrency -> viewModel.updateSelectedCurrency(selectedCurrency) }
 
 			IconButton(onClick = {
@@ -69,7 +74,7 @@ fun CurrenciesScreen(
 				Icon(Icons.Default.Search, contentDescription = null)
 			}
 		}
-		Box() {
+		Box {
 			LazyColumn(
 				modifier = Modifier
 					.fillMaxSize()
@@ -77,15 +82,14 @@ fun CurrenciesScreen(
 				verticalArrangement = Arrangement.spacedBy(20.dp),
 				contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
 			) {
-				items(currencies.value.data.size) { index ->
-					val currency = currencies.value.data[index]
+				items(state.value.currencies.size) { index ->
+					val currency = state.value.currencies[index]
 					CurrencyItem(
 						currencyTitle = currency.title,
 						currencyValue = currency.value,
 						isFavourite = currency.isFavourite
 					) {
 						viewModel.toggleCurrenciesPairFavourites(
-							selectedCurrency.value,
 							currency
 						)
 					}
@@ -121,7 +125,6 @@ fun SelectableCurrencyDropdown(
 					onClick = {
 						onSelectCurrency(item)
 						expanded = false
-
 					}
 				)
 			}
@@ -142,4 +145,14 @@ enum class FiltersOptions(@StringRes val stringId: Int) {
 	SORTING_TITLE_DESC(R.string.code_z_a),
 	SORTING_VALUE_ASC(R.string.quote_asc),
 	SORTING_VALUE_DESC(R.string.quote_desc)
+}
+
+
+@Preview
+@Composable
+fun GreetingPreview() {
+	CurrenciesScreen(
+		navController = rememberNavController(),
+		viewModel = hiltViewModel()
+	)
 }

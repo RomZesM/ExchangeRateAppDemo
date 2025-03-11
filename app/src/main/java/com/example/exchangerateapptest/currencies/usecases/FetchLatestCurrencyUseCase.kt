@@ -2,7 +2,6 @@ package com.example.exchangerateapptest.currencies.usecases
 
 
 import android.util.Log
-import com.example.exchangerateapptest.currencies.CurrenciesResponse
 import com.example.exchangerateapptest.currencies.CurrencyEntry
 import com.example.exchangerateapptest.networking.FreeCurrencyApi
 import javax.inject.Inject
@@ -11,7 +10,7 @@ class FetchLatestCurrencyUseCase @Inject constructor(
 	private val freeCurrencyApi: FreeCurrencyApi
 ) {
 
-	suspend fun invoke(selectedCurrency: String?): CurrenciesResponse {
+	suspend fun invoke(selectedCurrency: String?): List<CurrencyEntry> {
 		val list = mutableListOf<CurrencyEntry>()
 		try {
 			val response = freeCurrencyApi.getLatestRates(selectedCurrency)
@@ -28,7 +27,7 @@ class FetchLatestCurrencyUseCase @Inject constructor(
 		} catch (e: Exception) {
 			Log.e("Fetching currencies error:", e.toString())
 		}
-		return CurrenciesResponse(list)
+		return list
 	}
 
 }
