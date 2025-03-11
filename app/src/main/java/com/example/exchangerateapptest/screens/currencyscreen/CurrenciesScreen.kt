@@ -1,5 +1,6 @@
 package com.example.exchangerateapptest.screens.currencyscreen
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,16 +28,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.exchangerateapptest.R
 import com.example.exchangerateapptest.currencies.CurrencyEntry
 import com.example.exchangerateapptest.screens.common.composables.CurrencyItem
+import com.example.exchangerateapptest.screens.main.Screen
 
 @Composable
 fun CurrenciesScreen(
-	navController: NavHostController
+	navController: NavHostController,
+	viewModel: CurrenciesScreenViewModel
 ) {
-	val viewModel: CurrenciesScreenViewModel = hiltViewModel()
+
 	val currencies = viewModel.currencies.collectAsState()
 	val selectedCurrency = viewModel.selectedCurrency.collectAsState()
 
@@ -55,34 +58,35 @@ fun CurrenciesScreen(
 				selectedCurrency.value
 			) { selectedCurrency -> viewModel.updateSelectedCurrency(selectedCurrency) }
 
-			IconButton(onClick = { navController.navigate("Filters") }) {
+			IconButton(onClick = {
+				navController.navigate(Screen.Filters.route)
+			}) {
 				Icon(Icons.Default.Search, contentDescription = null)
 			}
 		}
-			Box() {
-				LazyColumn(
-					modifier = Modifier
-						.fillMaxSize()
-						.padding(vertical = 5.dp),
-					verticalArrangement = Arrangement.spacedBy(20.dp),
-					contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
-				) {
-					items(currencies.value.data.size) { index ->
-						val currency = currencies.value.data[index]
-						CurrencyItem(
-							currencyTitle = currency.title,
-							currencyValue = currency.value,
-							isFavourite = currency.isFavourite
-						) {
-							viewModel.toggleCurrenciesPairFavourites(
-								selectedCurrency.value,
-								currency
-							)
-						}
+		Box() {
+			LazyColumn(
+				modifier = Modifier
+					.fillMaxSize()
+					.padding(vertical = 5.dp),
+				verticalArrangement = Arrangement.spacedBy(20.dp),
+				contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
+			) {
+				items(currencies.value.data.size) { index ->
+					val currency = currencies.value.data[index]
+					CurrencyItem(
+						currencyTitle = currency.title,
+						currencyValue = currency.value,
+						isFavourite = currency.isFavourite
+					) {
+						viewModel.toggleCurrenciesPairFavourites(
+							selectedCurrency.value,
+							currency
+						)
 					}
 				}
 			}
-
+		}
 
 	}
 
@@ -126,4 +130,11 @@ private fun getListOfCurrencies(currencies: List<CurrencyEntry>): List<String> {
 		currenciesOptions.add(currency.title)
 	}
 	return currenciesOptions
+}
+
+enum class FiltersOptions(@StringRes val stringId: Int) {
+	SORTING_TITLE_ASC(R.string.code_a_z),
+	SORTING_TITLE_DESC(R.string.code_z_a),
+	SORTING_VALUE_ASC(R.string.quote_asc),
+	SORTING_VALUE_DESC(R.string.quote_desc)
 }

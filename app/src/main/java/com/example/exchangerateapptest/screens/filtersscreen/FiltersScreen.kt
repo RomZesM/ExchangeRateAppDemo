@@ -17,22 +17,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.exchangerateapptest.R
+import com.example.exchangerateapptest.screens.currencyscreen.CurrenciesScreenViewModel
+import com.example.exchangerateapptest.screens.currencyscreen.FiltersOptions
 
 
 @Composable
-fun FiltersScreen() {
-	val options = listOf(
-		stringResource(R.string.code_a_z),
-		stringResource(R.string.code_z_a),
-		stringResource(R.string.quote_asc),
-		stringResource(R.string.quote_desc)
+fun FiltersScreen(
+	sharedViewModel: CurrenciesScreenViewModel,
+	navController: NavHostController
+) {
+
+	val filterOptions = listOf(
+		FiltersOptions.SORTING_TITLE_ASC,
+		FiltersOptions.SORTING_TITLE_DESC,
+		FiltersOptions.SORTING_VALUE_ASC,
+		FiltersOptions.SORTING_VALUE_DESC
 	)
 
-	var selectedOption by remember { mutableStateOf<String?>(null) }
+	var selectedOption by remember { mutableStateOf(sharedViewModel.currentFiltersOptions.value) }
 
 	Column {
-		options.forEach { option ->
+		filterOptions.forEach { option ->
 			Row(
 				verticalAlignment = Alignment.CenterVertically,
 				modifier = Modifier
@@ -40,7 +47,7 @@ fun FiltersScreen() {
 					.clickable { selectedOption = option }
 					.padding(8.dp)
 			) {
-				Text(text = option, modifier = Modifier.padding(start = 8.dp))
+				Text(text = option.name, modifier = Modifier.padding(start = 8.dp))
 
 				Checkbox(
 					checked = selectedOption == option,
@@ -48,7 +55,10 @@ fun FiltersScreen() {
 				)
 			}
 		}
-		Button({}) {
+		Button({
+			sharedViewModel.updateFilterOptions(selectedOption)
+			navController.popBackStack()
+		}) {
 			Text(text = stringResource(R.string.apply))
 		}
 	}

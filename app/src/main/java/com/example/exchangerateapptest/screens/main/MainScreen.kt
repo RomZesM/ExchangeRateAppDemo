@@ -12,17 +12,21 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.exchangerateapptest.screens.currencyscreen.CurrenciesScreen
+import com.example.exchangerateapptest.screens.currencyscreen.CurrenciesScreenViewModel
 import com.example.exchangerateapptest.screens.favouritescreen.FavouritesScreen
 import com.example.exchangerateapptest.screens.filtersscreen.FiltersScreen
+import kotlinx.serialization.Serializable
 
 @Composable
 fun MainScreen() {
 	val navController: NavHostController = rememberNavController()
+	val sharedViewModel : CurrenciesScreenViewModel = hiltViewModel()
 
 	Scaffold(
 		topBar = {
@@ -39,6 +43,7 @@ fun MainScreen() {
 		},
 		content = { padding ->
 			MainScreenContent(
+				sharedViewModel = sharedViewModel,
 				padding = padding,
 				navController = navController,
 			)
@@ -51,6 +56,7 @@ fun MainScreen() {
 fun MainScreenContent(
 	padding: PaddingValues,
 	navController: NavHostController,
+	sharedViewModel: CurrenciesScreenViewModel,
 ) {
 	Surface(
 		modifier = Modifier
@@ -64,17 +70,27 @@ fun MainScreenContent(
 			exitTransition = { fadeOut(animationSpec = tween(200)) },
 			startDestination = "Currencies",
 		) {
-			composable("Currencies") {
+			composable(Screen.Currencies.route) {
 				CurrenciesScreen(
-					navController = navController
+					navController = navController,
+					viewModel = sharedViewModel
 				)
 			}
-			composable("Favourites") {
+			composable(Screen.Favourites.route) {
 				FavouritesScreen()
 			}
-			composable("Filters") {
-				FiltersScreen()
+			composable(Screen.Filters.route) {
+				FiltersScreen(
+					navController = navController,
+					sharedViewModel = sharedViewModel
+				)
 			}
 		}
 	}
+}
+
+sealed class Screen(val route: String) {
+	object Currencies : Screen("Currencies")
+	object Favourites : Screen("Favourites")
+	object Filters : Screen("Filters")
 }

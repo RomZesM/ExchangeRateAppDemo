@@ -20,8 +20,8 @@ fun MyBottomTabsBar(
 	navController: NavHostController
 ) {
 	val bottomTabs = listOf(
-		BottomNavItem("Currencies", "Currencies", Icons.Default.Home),
-		BottomNavItem("Favourites", "Favourites", Icons.Default.Star)
+		BottomNavItem(Screen.Currencies.route, "Currencies", Icons.Default.Home),
+		BottomNavItem(Screen.Favourites.route, "Favourites", Icons.Default.Star)
 	)
 
 	NavigationBar {

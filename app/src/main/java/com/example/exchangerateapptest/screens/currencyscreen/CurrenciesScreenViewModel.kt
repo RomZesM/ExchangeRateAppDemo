@@ -31,6 +31,8 @@ class CurrenciesScreenViewModel @Inject constructor(
 	private val _selectedCurrency = MutableStateFlow(Constants.DEFAULT_CURRENCY)
 	val selectedCurrency = _selectedCurrency.asStateFlow()
 
+	val currentFiltersOptions = MutableStateFlow(FiltersOptions.SORTING_TITLE_ASC)
+
 
 	suspend fun fetchLastCurrencies(selectedCurrency: String) {
 		withContext(Dispatchers.IO) {
@@ -47,7 +49,6 @@ class CurrenciesScreenViewModel @Inject constructor(
 		}
 	}
 
-
 	fun toggleCurrenciesPairFavourites(selectedCurrency: String, targetPair: CurrencyEntry) {
 		viewModelScope.launch(Dispatchers.IO) {
 			val pair = FavouriteCurrenciesPair(
@@ -62,10 +63,9 @@ class CurrenciesScreenViewModel @Inject constructor(
 		}
 	}
 
-
 	private fun updateFavouriteStatus(selectedValue: String) {
 		val updatedList = _currencies.value.data.map {
-			val id = selectedValue + "/" + it.title // USD/EUR
+			val id = selectedValue + "/" + it.title
 			val isFavourite = _favourites.value.any { fav ->
 				fav.id == id
 			}
@@ -78,4 +78,9 @@ class CurrenciesScreenViewModel @Inject constructor(
 		_selectedCurrency.value = selectedCurrency
 	}
 
+	fun updateFilterOptions(filter: FiltersOptions) {
+		currentFiltersOptions.value = filter
+	}
+
 }
+
