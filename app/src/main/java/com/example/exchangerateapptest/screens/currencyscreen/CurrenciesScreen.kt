@@ -1,6 +1,7 @@
 package com.example.exchangerateapptest.screens.currencyscreen
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,11 +29,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.exchangerateapptest.R
 import com.example.exchangerateapptest.currencies.CurrencyEntry
 import com.example.exchangerateapptest.screens.common.composables.CurrencyItem
@@ -57,19 +58,42 @@ fun CurrenciesScreen(
 		viewModel.sortCurrencies()
 	}
 
-	Column(modifier = Modifier.padding(vertical = 10.dp)) {
+
+	CurrentScreenLayout(
+		state,
+		{ selectedCurrency -> viewModel.updateSelectedCurrency(selectedCurrency) },
+		{ navController.navigate(Screen.Filters.route) },
+		{ currency -> viewModel.toggleCurrenciesPairFavourites(currency) }
+	)
+
+
+}
+
+@Composable
+fun CurrentScreenLayout(
+	state: State<CurrencyScreenState>,
+	onSelectCurrency: (String) -> Unit,
+	onFilterClick: () -> Unit,
+	toggleCurrenciesFavourite: (CurrencyEntry) -> Unit
+) {
+	Column(
+		modifier = Modifier
+			.padding(vertical = 10.dp)
+			.background(color = Color.White),
+	) {
 		Row(
-			modifier = Modifier.padding(vertical = 10.dp),
+			modifier = Modifier
+				.padding(vertical = 10.dp),
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.SpaceBetween
 		) {
 			SelectableCurrencyDropdown(
-				state.value.currencies,
-				state.value.selectedCurrency
-			) { selectedCurrency -> viewModel.updateSelectedCurrency(selectedCurrency) }
+				state,
+				onSelectCurrency
+			)
 
 			IconButton(onClick = {
-				navController.navigate(Screen.Filters.route)
+				onFilterClick()
 			}) {
 				Icon(Icons.Default.Search, contentDescription = null)
 			}
@@ -89,30 +113,26 @@ fun CurrenciesScreen(
 						currencyValue = currency.value,
 						isFavourite = currency.isFavourite
 					) {
-						viewModel.toggleCurrenciesPairFavourites(
-							currency
-						)
+						toggleCurrenciesFavourite(currency)
 					}
 				}
 			}
 		}
 
 	}
-
 }
 
 @Composable
 fun SelectableCurrencyDropdown(
-	currencies: List<CurrencyEntry>,
-	selectedCurrency: String,
+	state: State<CurrencyScreenState>,
 	onSelectCurrency: (String) -> Unit
 ) {
 	var expanded by remember { mutableStateOf(false) }
-	val menuItems = getListOfCurrencies(currencies)
+	val menuItems = getListOfCurrencies(state.value.currencies)
 
 	Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
 		Button(onClick = { expanded = true }) {
-			Text(text = selectedCurrency)
+			Text(text = state.value.selectedCurrency)
 		}
 
 		DropdownMenu(
@@ -150,9 +170,21 @@ enum class FiltersOptions(@StringRes val stringId: Int) {
 
 @Preview
 @Composable
-fun GreetingPreview() {
-	CurrenciesScreen(
-		navController = rememberNavController(),
-		viewModel = hiltViewModel()
+fun CurrencyScreenPreview(showBackground: Boolean = true) {
+	CurrentScreenLayout(
+		state = remember {
+			mutableStateOf(
+				CurrencyScreenState(
+					currencies = listOf(
+						CurrencyEntry("USD", 1.0, true),
+						CurrencyEntry("EUR", 1.0, true),
+					)
+				)
+			)
+		},
+		onSelectCurrency = { },
+		onFilterClick = { },
+		toggleCurrenciesFavourite = { }
+
 	)
 }
