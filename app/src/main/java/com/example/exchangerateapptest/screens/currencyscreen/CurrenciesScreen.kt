@@ -42,6 +42,7 @@ fun CurrenciesScreen(
 
 	val currencies = viewModel.currencies.collectAsState()
 	val selectedCurrency = viewModel.selectedCurrency.collectAsState()
+	val filtersOptions = viewModel.currentFiltersOptions.collectAsState()
 
 	LaunchedEffect(Unit) {
 		viewModel.fetchFavouriteCurrenciesPairs(selectedCurrency.value)
@@ -49,6 +50,10 @@ fun CurrenciesScreen(
 
 	LaunchedEffect(selectedCurrency.value) {
 		viewModel.fetchLastCurrencies(selectedCurrency.value)
+	}
+
+	LaunchedEffect(filtersOptions.value) {
+		viewModel.sortCurrencies()
 	}
 
 	Column {

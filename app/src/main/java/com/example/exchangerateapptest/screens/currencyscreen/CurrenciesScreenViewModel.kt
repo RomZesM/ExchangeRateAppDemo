@@ -38,7 +38,7 @@ class CurrenciesScreenViewModel @Inject constructor(
 		withContext(Dispatchers.IO) {
 			_currencies.value = fetchLatestCurrencyUseCase.invoke(selectedCurrency)
 			updateFavouriteStatus(selectedCurrency)
-
+			sortCurrencies()
 		}
 	}
 
@@ -81,6 +81,25 @@ class CurrenciesScreenViewModel @Inject constructor(
 	fun updateFilterOptions(filter: FiltersOptions) {
 		currentFiltersOptions.value = filter
 	}
+
+	fun sortCurrencies() {
+
+		val sortedList = when (currentFiltersOptions.value) {
+			FiltersOptions.SORTING_TITLE_ASC ->
+				_currencies.value.data.sortedBy { it.title }
+
+			FiltersOptions.SORTING_TITLE_DESC ->
+				_currencies.value.data.sortedByDescending { it.title }
+
+			FiltersOptions.SORTING_VALUE_ASC ->
+				_currencies.value.data.sortedBy { it.value }
+
+			FiltersOptions.SORTING_VALUE_DESC ->
+				_currencies.value.data.sortedByDescending { it.value }
+		}
+		_currencies.value = _currencies.value.copy(data = sortedList)
+	}
+
 
 }
 
