@@ -10,23 +10,31 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.exchangerateapptest.screens.currencyscreen.CurrenciesScreen
 import com.example.exchangerateapptest.screens.currencyscreen.CurrenciesScreenViewModel
 import com.example.exchangerateapptest.screens.favouritescreen.FavouritesScreen
 import com.example.exchangerateapptest.screens.filtersscreen.FiltersScreen
-import kotlinx.serialization.Serializable
+
 
 @Composable
 fun MainScreen() {
 	val navController: NavHostController = rememberNavController()
-	val sharedViewModel : CurrenciesScreenViewModel = hiltViewModel()
+	val sharedViewModel: CurrenciesScreenViewModel = hiltViewModel()
+
+	val listOfScreensWithBottomAppBar = listOf(
+		Screen.Currencies.route,
+		Screen.Favourites.route
+	)
+
 
 	Scaffold(
 		topBar = {
@@ -35,11 +43,14 @@ fun MainScreen() {
 			)
 		},
 		bottomBar = {
-			BottomAppBar(modifier = Modifier) {
-				MyBottomTabsBar(
-					navController = navController
-				)
+			if (currentRoute(navController) in listOfScreensWithBottomAppBar) {
+				BottomAppBar(modifier = Modifier) {
+					MyBottomTabsBar(
+						navController = navController
+					)
+				}
 			}
+
 		},
 		content = { padding ->
 			MainScreenContent(
@@ -49,7 +60,6 @@ fun MainScreen() {
 			)
 		}
 	)
-
 }
 
 @Composable
@@ -87,6 +97,12 @@ fun MainScreenContent(
 			}
 		}
 	}
+}
+
+@Composable
+fun currentRoute(navController: NavHostController): String? {
+	val navBackStackEntry by navController.currentBackStackEntryAsState()
+	return navBackStackEntry?.destination?.route
 }
 
 sealed class Screen(val route: String) {
