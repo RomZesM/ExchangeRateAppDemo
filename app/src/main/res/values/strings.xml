@@ -2,6 +2,9 @@
     <string name="app_name">ExchangeRateAppTest</string>
     <string name="currency_tab_name">Currencies</string>
     <string name="favourite_tab_name">Favorites</string>
+    <string name="screen_title_currencies">Currencies</string>
+    <string name="screen_title_favourites">Favorites</string>
+    <string name="screen_title_filters">Filters</string>
     <string name="code_a_z">Code A-Z</string>
     <string name="code_z_a">Code Z-A</string>"
     <string name="quote_asc">Quote Asc.</string>"
