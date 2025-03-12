@@ -126,7 +126,7 @@ fun CurrentScreenLayout(
 			LazyColumn(
 				modifier = Modifier
 					.fillMaxSize()
-					.padding(vertical = 16.dp, horizontal = 16.dp),
+					.padding(top =  16.dp, bottom =  0.dp, start = 16.dp, end = 16.dp),
 				verticalArrangement = Arrangement.spacedBy(8.dp)
 			) {
 				items(state.value.currencies.size) { index ->

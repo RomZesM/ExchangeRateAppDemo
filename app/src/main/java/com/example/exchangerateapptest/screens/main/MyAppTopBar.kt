@@ -78,7 +78,7 @@ fun MyTopAppBarLayout(
 								painter = painterResource(
 									R.drawable.arrow_back_icon
 								),
-								contentDescription = "Dropdown Icon",
+								contentDescription = "BackButton icon",
 								tint = extendedColors.primary
 							)
 						}

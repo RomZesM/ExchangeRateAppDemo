@@ -3,15 +3,18 @@ package com.example.exchangerateapptest.screens.main
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -22,6 +25,7 @@ import com.example.exchangerateapptest.screens.currencyscreen.CurrenciesScreen
 import com.example.exchangerateapptest.screens.currencyscreen.CurrenciesScreenViewModel
 import com.example.exchangerateapptest.screens.favouritescreen.FavouritesScreen
 import com.example.exchangerateapptest.screens.filtersscreen.FiltersScreen
+import com.example.exchangerateapptest.ui.theme.LocalExtendedColors
 
 
 @Composable
@@ -33,7 +37,7 @@ fun MainScreen() {
 		Screen.Currencies.route,
 		Screen.Favourites.route
 	)
-
+	val extendedColors = LocalExtendedColors.current
 
 	Scaffold(
 		topBar = {
@@ -41,23 +45,27 @@ fun MainScreen() {
 				navController = navController
 			)
 		},
-		bottomBar = {
-			if (currentRoute(navController) in listOfScreensWithBottomAppBar) {
-				BottomAppBar(modifier = Modifier) {
-					MyBottomTabsBar(
-						navController = navController
-					)
-				}
-			}
-
-		},
 		content = { padding ->
 			MainScreenContent(
 				sharedViewModel = sharedViewModel,
 				padding = padding,
 				navController = navController,
 			)
-		}
+		},
+		bottomBar = {
+			if (currentRoute(navController) in listOfScreensWithBottomAppBar) {
+				Column {
+					HorizontalDivider(thickness = 1.dp, color = extendedColors.outline)
+					BottomAppBar(containerColor = extendedColors.bgDefault) {
+						MyBottomTabsBar(
+							navController = navController
+						)
+					}
+				}
+
+			}
+
+		},
 	)
 }
 

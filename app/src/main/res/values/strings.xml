@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">ExchangeRateAppTest</string>
     <string name="currency_tab_name">Currencies</string>
+    <string name="currency_tab_icon_content_description">Open currencies tab</string>
     <string name="favourite_tab_name">Favorites</string>
+    <string name="favourite_tab_icon_content_description">Open favoutites tab</string>
     <string name="screen_title_currencies">Currencies</string>
     <string name="screen_title_favourites">Favorites</string>
     <string name="screen_title_filters">Filters</string>
