@@ -111,6 +111,7 @@ fun CurrentScreenLayout(
 				modifier = Modifier
 					.size(48.dp)
 					.border(1.dp, extendedColors.secondary, RoundedCornerShape(8.dp))
+					.background(extendedColors.bgDefault)
 			) {
 				Icon(
 					painter = painterResource(R.drawable.filter),
@@ -169,7 +170,7 @@ fun SelectableCurrencyDropdown(
 				trailingIcon = {
 					Icon(
 						painter = painterResource(
-							if (isExpanded) R.drawable.drop_down_icon else R.drawable.drop_up_icon
+							if (isExpanded)R.drawable.drop_up_icon else R.drawable.drop_down_icon
 						),
 						contentDescription = "Dropdown Icon",
 						tint = extendedColors.primary
@@ -250,8 +251,8 @@ fun CurrencyScreenPreview(showBackground: Boolean = true) {
 			mutableStateOf(
 				CurrencyScreenState(
 					currencies = listOf(
-						CurrencyEntry("USD", 1.0, true),
-						CurrencyEntry("EUR", 1.0, true),
+						CurrencyEntry("USD", 1.123456, true),
+						CurrencyEntry("EUR", 123.000888, true),
 					)
 				)
 			)
