@@ -94,7 +94,7 @@ fun CurrentScreenLayout(
 	) {
 		Row(
 			modifier = Modifier
-				.background(color = extendedColors.bgCard)
+				.background(color = extendedColors.bgHeader)
 				.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp)
 				.fillMaxWidth(),
 			verticalAlignment = Alignment.CenterVertically,
@@ -115,7 +115,7 @@ fun CurrentScreenLayout(
 				Icon(
 					painter = painterResource(R.drawable.filter),
 					contentDescription = "Filter Icon",
-					tint = Color.Blue,
+					tint = extendedColors.primary,
 					modifier = Modifier
 						.padding(12.dp)
 				)
@@ -125,8 +125,8 @@ fun CurrentScreenLayout(
 			LazyColumn(
 				modifier = Modifier
 					.fillMaxSize()
-					.padding(vertical = 5.dp),
-				verticalArrangement = Arrangement.spacedBy(20.dp)
+					.padding(vertical = 16.dp, horizontal = 16.dp),
+				verticalArrangement = Arrangement.spacedBy(8.dp)
 			) {
 				items(state.value.currencies.size) { index ->
 					val currency = state.value.currencies[index]
