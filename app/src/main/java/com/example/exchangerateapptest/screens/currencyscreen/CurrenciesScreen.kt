@@ -1,6 +1,5 @@
 package com.example.exchangerateapptest.screens.currencyscreen
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -126,7 +125,7 @@ fun CurrentScreenLayout(
 			LazyColumn(
 				modifier = Modifier
 					.fillMaxSize()
-					.padding(top =  16.dp, bottom =  0.dp, start = 16.dp, end = 16.dp),
+					.padding(top = 16.dp, bottom = 0.dp, start = 16.dp, end = 16.dp),
 				verticalArrangement = Arrangement.spacedBy(8.dp)
 			) {
 				items(state.value.currencies.size) { index ->
@@ -233,13 +232,6 @@ private fun getListOfCurrencies(currencies: List<CurrencyEntry>): List<String> {
 		currenciesOptions.add(currency.title)
 	}
 	return currenciesOptions
-}
-
-enum class FiltersOptions(@StringRes val stringId: Int) {
-	SORTING_TITLE_ASC(R.string.code_a_z),
-	SORTING_TITLE_DESC(R.string.code_z_a),
-	SORTING_VALUE_ASC(R.string.quote_asc),
-	SORTING_VALUE_DESC(R.string.quote_desc)
 }
 
 

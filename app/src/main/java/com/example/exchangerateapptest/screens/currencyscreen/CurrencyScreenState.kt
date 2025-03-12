@@ -2,6 +2,7 @@ package com.example.exchangerateapptest.screens.currencyscreen
 
 import com.example.exchangerateapptest.currencies.CurrencyEntry
 import com.example.exchangerateapptest.screens.common.composables.Constants
+import com.example.exchangerateapptest.screens.filtersscreen.FiltersOptions
 
 data class CurrencyScreenState(
 	var currentFiltersOptions: FiltersOptions = FiltersOptions.SORTING_TITLE_ASC,

@@ -7,6 +7,7 @@ import com.example.exchangerateapptest.currencies.FavouriteCurrenciesPair
 import com.example.exchangerateapptest.currencies.usecases.FetchFavouritesCurrenciesPairsUseCase
 import com.example.exchangerateapptest.currencies.usecases.FetchLatestCurrencyUseCase
 import com.example.exchangerateapptest.currencies.usecases.ToggleFavouritePairIconUseCase
+import com.example.exchangerateapptest.screens.filtersscreen.FiltersOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
