@@ -2,22 +2,29 @@ package com.example.exchangerateapptest.screens.currencyscreen
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -37,6 +45,7 @@ import com.example.exchangerateapptest.R
 import com.example.exchangerateapptest.currencies.CurrencyEntry
 import com.example.exchangerateapptest.screens.common.composables.CurrencyItem
 import com.example.exchangerateapptest.screens.main.Screen
+import com.example.exchangerateapptest.ui.theme.LocalExtendedColors
 
 @Composable
 fun CurrenciesScreen(
@@ -76,14 +85,18 @@ fun CurrentScreenLayout(
 	onFilterClick: () -> Unit,
 	toggleCurrenciesFavourite: (CurrencyEntry) -> Unit
 ) {
+	val extendedColors = LocalExtendedColors.current
+
 	Column(
 		modifier = Modifier
-			.padding(vertical = 10.dp)
-			.background(color = Color.White),
+			.background(color = extendedColors.bgDefault)
+			.fillMaxSize()
 	) {
 		Row(
 			modifier = Modifier
-				.padding(vertical = 10.dp),
+				.background(color = extendedColors.bgCard)
+				.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp)
+				.fillMaxWidth(),
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.SpaceBetween
 		) {
@@ -91,11 +104,21 @@ fun CurrentScreenLayout(
 				state,
 				onSelectCurrency
 			)
+			Spacer(modifier = Modifier.width(8.dp))
 
-			IconButton(onClick = {
-				onFilterClick()
-			}) {
-				Icon(Icons.Default.Search, contentDescription = null)
+			IconButton(
+				onClick = { onFilterClick() },
+				modifier = Modifier
+					.size(48.dp)
+					.border(1.dp, extendedColors.secondary, RoundedCornerShape(8.dp))
+			) {
+				Icon(
+					painter = painterResource(R.drawable.filter),
+					contentDescription = "Filter Icon",
+					tint = Color.Blue,
+					modifier = Modifier
+						.padding(12.dp)
+				)
 			}
 		}
 		Box {
@@ -103,8 +126,7 @@ fun CurrentScreenLayout(
 				modifier = Modifier
 					.fillMaxSize()
 					.padding(vertical = 5.dp),
-				verticalArrangement = Arrangement.spacedBy(20.dp),
-				contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp)
+				verticalArrangement = Arrangement.spacedBy(20.dp)
 			) {
 				items(state.value.currencies.size) { index ->
 					val currency = state.value.currencies[index]
@@ -122,34 +144,86 @@ fun CurrentScreenLayout(
 	}
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectableCurrencyDropdown(
 	state: State<CurrencyScreenState>,
 	onSelectCurrency: (String) -> Unit
 ) {
-	var expanded by remember { mutableStateOf(false) }
+	val extendedColors = LocalExtendedColors.current
+
+	var isExpanded by remember { mutableStateOf(false) }
 	val menuItems = getListOfCurrencies(state.value.currencies)
 
-	Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
-		Button(onClick = { expanded = true }) {
-			Text(text = state.value.selectedCurrency)
-		}
-
-		DropdownMenu(
-			expanded = expanded,
-			onDismissRequest = { expanded = false }
+	Row(
+		verticalAlignment = Alignment.CenterVertically
+	) {
+		ExposedDropdownMenuBox(
+			expanded = isExpanded,
+			onExpandedChange = { isExpanded = it }
 		) {
-			menuItems.forEach { item ->
-				DropdownMenuItem(
-					text = { Text(item) },
-					onClick = {
-						onSelectCurrency(item)
-						expanded = false
-					}
-				)
+			OutlinedTextField(
+				value = state.value.selectedCurrency,
+				onValueChange = {},
+				readOnly = true,
+				trailingIcon = {
+					Icon(
+						painter = painterResource(
+							if (isExpanded) R.drawable.drop_down_icon else R.drawable.drop_up_icon
+						),
+						contentDescription = "Dropdown Icon",
+						tint = extendedColors.primary
+					)
+				},
+				textStyle = MaterialTheme.typography.bodyMedium,
+				colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(
+					focusedBorderColor = Color.Transparent,
+					unfocusedBorderColor = Color.Transparent,
+					disabledBorderColor = Color.Transparent,
+				),
+				modifier = Modifier
+					.fillMaxWidth(0.8f)
+					.height(48.dp)
+					.menuAnchor()
+					.border(1.dp, extendedColors.secondary, RoundedCornerShape(8.dp))
+					.background(extendedColors.bgDefault, RoundedCornerShape(8.dp))
+			)
+
+			ExposedDropdownMenu(
+				expanded = isExpanded,
+				onDismissRequest = { isExpanded = false },
+				modifier = Modifier
+					.heightIn(
+						max = (7 * 48).dp
+					)
+					.align(Alignment.Bottom)
+					.border(1.dp, extendedColors.secondary, RoundedCornerShape(12.dp))
+					.background(extendedColors.bgDefault, RoundedCornerShape(12.dp))
+			) {
+				menuItems.forEach { item ->
+					DropdownMenuItem(
+						text = {
+							Text(
+								item,
+								style = MaterialTheme.typography.bodyMedium,
+							)
+						},
+						onClick = {
+							onSelectCurrency(item)
+							isExpanded = false
+						},
+						modifier = Modifier
+							.background(
+								if (item == state.value.selectedCurrency) extendedColors.lightPrimary
+								else Color.Transparent
+							)
+
+					)
+				}
 			}
 		}
 	}
+
 }
 
 private fun getListOfCurrencies(currencies: List<CurrencyEntry>): List<String> {
