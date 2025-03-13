@@ -1,4 +1,4 @@
-package com.example.exchangerateapptest.networking
+package com.example.exchangerateapptest.networking.currency
 
 import com.squareup.moshi.JsonClass
 

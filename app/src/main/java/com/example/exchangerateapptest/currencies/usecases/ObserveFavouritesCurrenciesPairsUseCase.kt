@@ -2,6 +2,7 @@ package com.example.exchangerateapptest.currencies.usecases
 
 import android.util.Log
 import com.example.exchangerateapptest.common.database.FavouriteCurrenciesPairDAO
+import com.example.exchangerateapptest.common.extensions.roundToSixDigits
 import com.example.exchangerateapptest.currencies.FavouriteCurrenciesPair
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,7 +20,7 @@ class ObserveFavouritesCurrenciesPairsUseCase @Inject constructor(
 						id = entity.id,
 						baseCurrency = entity.baseCurrency,
 						targetCurrency = entity.targetCurrency,
-						value = entity.value,
+						value = entity.value.roundToSixDigits(),
 						timestamp = entity.timestamp
 					)
 				}

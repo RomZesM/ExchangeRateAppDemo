@@ -1,5 +1,6 @@
 package com.example.exchangerateapptest.networking
 
+import com.example.exchangerateapptest.networking.currency.CurrenciesResponseSchema
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
