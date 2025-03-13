@@ -243,8 +243,8 @@ fun CurrencyScreenPreview(showBackground: Boolean = true) {
 			mutableStateOf(
 				CurrencyScreenState(
 					currencies = listOf(
-						CurrencyEntry("USD", 1.123456, true),
-						CurrencyEntry("EUR", 123.000888, true),
+						CurrencyEntry("USD", "1.123456", true),
+						CurrencyEntry("EUR", "123.000888", true),
 					)
 				)
 			)

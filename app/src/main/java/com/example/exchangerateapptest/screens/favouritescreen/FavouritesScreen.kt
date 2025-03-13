@@ -73,7 +73,7 @@ fun FavouritesScreenLayoutPreview() {
 					id = "EUR/PLN",
 					baseCurrency = "EUR",
 					targetCurrency = "PLN",
-					value = 2.254654,
+					value = "2.254654",
 					isFavourite = true,
 					timestamp = 1234567890
 				),

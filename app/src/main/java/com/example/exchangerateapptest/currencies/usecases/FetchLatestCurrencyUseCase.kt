@@ -2,7 +2,6 @@ package com.example.exchangerateapptest.currencies.usecases
 
 
 import android.util.Log
-import com.example.exchangerateapptest.common.extensions.roundToSixDigits
 import com.example.exchangerateapptest.currencies.CurrencyEntry
 import com.example.exchangerateapptest.networking.FreeCurrencyApi
 import javax.inject.Inject
@@ -18,7 +17,7 @@ class FetchLatestCurrencyUseCase @Inject constructor(
 
 			if (response.isSuccessful) {
 				response.body()?.data?.map { (key, value) ->
-					CurrencyEntry(title = key, value = value.roundToSixDigits())
+					CurrencyEntry(title = key, value = String.format("%.6f", value))
 				} ?: emptyList()
 			} else {
 				Log.e("Fetching currencies error", "API request failed: ${response.code()}")

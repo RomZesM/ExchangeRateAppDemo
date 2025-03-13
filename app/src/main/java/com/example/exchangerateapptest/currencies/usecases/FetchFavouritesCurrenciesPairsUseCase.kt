@@ -2,7 +2,6 @@ package com.example.exchangerateapptest.currencies.usecases
 
 import android.util.Log
 import com.example.exchangerateapptest.common.database.FavouriteCurrenciesPairDAO
-import com.example.exchangerateapptest.common.extensions.roundToSixDigits
 import com.example.exchangerateapptest.currencies.FavouriteCurrenciesPair
 import javax.inject.Inject
 
@@ -21,7 +20,7 @@ class FetchFavouritesCurrenciesPairsUseCase @Inject constructor(
 							id = it.id,
 							baseCurrency = it.baseCurrency,
 							targetCurrency = it.targetCurrency,
-							value = it.value.roundToSixDigits(),
+							value = it.value,
 							timestamp = it.timestamp
 						)
 					)

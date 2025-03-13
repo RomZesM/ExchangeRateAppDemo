@@ -29,7 +29,6 @@ class ApplicationModule {
 	@Provides
 	@Singleton
 	fun retrofit(httpClient: OkHttpClient): Retrofit {
-
 		return Retrofit.Builder()
 			.baseUrl(Constants.BASE_URL)
 			.addConverterFactory(MoshiConverterFactory.create())

@@ -27,7 +27,7 @@ import com.example.exchangerateapptest.ui.theme.LocalExtendedColors
 @Composable
 fun CurrencyItem(
 	currencyTitle: String,
-	currencyValue: Double,
+	currencyValue: String,
 	isFavourite: Boolean,
 	favToggle: () -> Unit
 ) {
@@ -84,7 +84,7 @@ fun CurrencyItem(
 fun CurrencyItemPreview() {
 	CurrencyItem(
 		currencyTitle = "USD",
-		currencyValue = 1.0,
+		currencyValue = "1.0",
 		isFavourite = false,
 		favToggle = { }
 	)
